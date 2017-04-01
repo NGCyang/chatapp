@@ -17,7 +17,8 @@ Flask and Flask-SQLAlchemy
             |user_name : _user_name
             |password : _password
             |  
-            ```
+  ```
+
   Create User:
   Takes a username and password and creates a new user in a persisted data store.
 
@@ -30,6 +31,7 @@ Flask and Flask-SQLAlchemy
           |body : _body
           |type : _type
           ```
+
   Send Message: Takes a sender, recipient, and message and saves that to the data store. Three different message types are supported.
   -  basic text-only message.
   -  image link.
@@ -45,6 +47,7 @@ Flask and Flask-SQLAlchemy
             |numperpage : _numperpage
             |page : _page
             ```
+            
     Fetch Messages:
     Takes two users and loads all messages sent between them.
     Two optional parameters: the number of message to show per page and which page to load.

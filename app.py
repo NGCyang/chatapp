@@ -21,7 +21,7 @@ def create_database():
      db.create_all()
 
 '''
-Router
+Routing
 '''
 @app.route('/')
 def main():
@@ -93,9 +93,11 @@ def fetch():
         return json.dumps({'message' : 'Invaild Message', 'Type':'Sender doesn\'t exist!'})
     if User.query.filter_by(id=_recipient_id).first() is None:
         return json.dumps({'message' : 'Invaild Message', 'Type':'Recipient doesn\'t exist!'})
-    _num_per_page = int(request.args.get('numperpage',''))
-    _page = int(request.args.get('page',''))
-    history = Message.query.filter(((Message.sender_id == _sender_id) & (Message.recipient_id==_recipient_id)) | ((Message.sender_id == _recipient_id) & (Message.recipient_id==_sender_id))).order_by(Message.send_date.desc()).paginate(_page, _num_per_page, False).items
+    history = Message.query.filter(((Message.sender_id == _sender_id) & (Message.recipient_id==_recipient_id)) | ((Message.sender_id == _recipient_id) & (Message.recipient_id==_sender_id))).order_by(Message.send_date.desc())
+    if 'numperpage' in request.args and 'page' in request.args:
+        _num_per_page = int(request.args.get('numperpage',''))
+        _page = int(request.args.get('page',''))
+        history = history.paginate(_page, _num_per_page, False).items
     return render_template('message_history.html', history=history)
 
 

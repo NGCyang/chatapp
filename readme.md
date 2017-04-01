@@ -9,7 +9,17 @@ This is a back end implement of chat application.
 Flask and Flask-SQLAlchemy
 - ```pip install -r requirements.txt```
 
-## RESTful API
+Create a new mysql database with name "chat"
+- ```mysql> CREATE DATABASE chat;```
+
+Modify SQLALCHEMY_DATABASE_URI at app.py
+Following format:
+```
+mysql://username:password@host:port/database
+```
+
+
+## API
 - ```POST /signup```
   ```
   Body:
@@ -30,7 +40,7 @@ Flask and Flask-SQLAlchemy
           |recipient_id : _recipient_id
           |body : _body
           |type : _type
-          ```
+  ```
 
   Send Message: Takes a sender, recipient, and message and saves that to the data store. Three different message types are supported.
   -  basic text-only message.
@@ -46,8 +56,8 @@ Flask and Flask-SQLAlchemy
             |#optional
             |numperpage : _numperpage
             |page : _page
-            ```
-            
+    ```
+
     Fetch Messages:
     Takes two users and loads all messages sent between them.
     Two optional parameters: the number of message to show per page and which page to load.

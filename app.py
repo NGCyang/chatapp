@@ -1,11 +1,13 @@
-from flask import Flask, json, request, jsonify, render_template
+from flask import Flask, json, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from models import db, Message, User
+from models import db, Message, User, Video, Image
 
 app = Flask(__name__)
 
-#mysql://username:password@host:port/database
+'''
+mysql://username:password@host:port/database
+'''
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yangmeng123@localhost/chat'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -58,13 +60,23 @@ def send():
     try:
         _sender_id = request.form.get('sender_id', '')
         _recipient_id = request.form.get('recipient_id', '')
-        if User.query.filter_by(id=_sender_id).first() is None:
+        sender = User.query.filter_by(id=_sender_id).first()
+        recipient = User.query.filter_by(id=_recipient_id).first()
+        if sender is None:
             return json.dumps({'message' : 'Invaild Message', 'Type':'Sender doesn\'t exist!'})
-        if User.query.filter_by(id=_recipient_id).first() is None:
+        if recipient is None:
             return json.dumps({'message' : 'Invaild Message', 'Type':'Recipient doesn\'t exist!'})
         _body = request.form.get('body', '')
-        new_message = Message(_sender_id, _recipient_id, _body)
+        _type = request.form.get('type', '')
+        new_message = Message(_sender_id, _recipient_id, _body, _type)
         db.session.add(new_message)
+        db.session.commit()
+        if _type == 'image':
+            new_image = Image(new_message.id, 1, 1)
+            db.session.add(new_image)
+        if _type == 'video':
+            new_video = Video(new_message.id, 1)
+            db.session.add(new_video)
         db.session.commit()
         return json.dumps({'message':'Message Successfully Sended',
                            'message_id':new_message.id,
@@ -88,6 +100,4 @@ def fetch():
 
 
 if __name__ == "__main__":
-
-    #setup_app(app)
     app.run('0.0.0.0', port = 8080)

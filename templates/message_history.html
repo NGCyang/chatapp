@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+   <head>History</head>
+   <body>
+     <h1>Message History</h1>
+          {% for message in history%}
+          <li>{{message['sender_id']}}, {{message['recipient_id']}}, {{message['message_type']}}, {{message['body']}}</li>
+          {% endfor %}
+   </body>
+</html>

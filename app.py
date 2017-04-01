@@ -1,23 +1,8 @@
-from flask import Flask, json
-#from flask import request
+from flask import Flask, json, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
-
-''''
-mysql = MySQL()
-# MySQL configurations
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'yangmeng123'
-app.config['MYSQL_DB'] = 'chat'
-app.config['MYSQL_HOST'] = 'localhost'
-mysql.init_app(app)
-
-connection = mysql.connect()
-cursor = connection.cursor()
-
-'''
 
 #mysql://username:password@host:port/database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yangmeng123@localhost/chat'
@@ -46,7 +31,7 @@ class Message(db.Model):
         self.send_date = send_date
 
     def __repr__(self):
-        return '<Post %r>' % self.id
+        return '<Post %r>' % self.body
 
 
 class User(db.Model):
@@ -62,13 +47,15 @@ class User(db.Model):
         return '<Category %r>' % self.id
 
 '''
-Intital ???
+Intital
 '''
 def setup_app(app):
    db.create_all()
-setup_app(app)
 
 
+'''
+Router
+'''
 @app.route('/')
 def main():
     return "Chat App"
@@ -95,6 +82,12 @@ def signup():
 def login():
     return "login"
 
+'''
+send request form Formet:
+sender_id:
+recipient_id:
+body:
+'''
 @app.route('/send',methods=['POST'])
 def send():
     try:
@@ -115,12 +108,20 @@ def send():
         return json.dumps({'error':str(e)})
 
 
-
-@app.route('/fetch',methods=['GET','POST'])
+@app.route('/fetch',methods=['GET'])
 def fetch():
-    if request.methods == 'GET':
-        return "fetch";
+    _sender_id = request.args.get('sender_id', '')
+    _recipient_id = request.args.get('recipient_id', '')
+    if User.query.filter_by(id=_sender_id).first() is None:
+        return json.dumps({'message' : 'Invaild Message', 'Type':'Sender doesn\'t exist!'})
+    if User.query.filter_by(id=_recipient_id).first() is None:
+        return json.dumps({'message' : 'Invaild Message', 'Type':'Recipient doesn\'t exist!'})
+    _num_per_page = int(request.args.get('numperpage',''))
+    _page = int(request.args.get('page',''))
+    history = Message.query.filter(((Message.sender_id == _sender_id) & (Message.recipient_id==_recipient_id)) | ((Message.sender_id == _recipient_id) & (Message.recipient_id==_sender_id))).order_by(Message.send_date.desc()).paginate(_page, _num_per_page, False).items
+    return render_template('message_history.html', history=history)
 
 
 if __name__ == "__main__":
+    setup_app(app)
     app.run('0.0.0.0', port = 8080)

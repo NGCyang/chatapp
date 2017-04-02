@@ -61,3 +61,35 @@ mysql://username:password@host:port/database
     Fetch Messages:
     Takes two users and loads all messages sent between them.
     Two optional parameters: the number of message to show per page and which page to load.
+
+## Schema
+Four tables are created for this application.
+- User Table
+  ```
+  |id           :   Integer       #primary_key
+  |user_name    :   String(50)
+  |password     :   String(50)
+  ```
+
+- Message Table
+  ```
+  |id           :    Integer       # primary_key
+  |sender_id    :    Integer
+  |recipient_id :    Integer
+  |body         :    Text
+  |type         :    String(5)
+  |send_date    :    timeStamp
+  ```
+
+- Image Table
+  ```
+  |message_id   :    Integer     # primary_key
+  |width        :    Integer
+  |height       :    Integer
+  ```
+
+- Video Table
+  ```
+  |message_id   :    Integer     # primary_key
+  |length       :    Integer
+  ```

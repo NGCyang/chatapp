@@ -5,25 +5,15 @@ db = SQLAlchemy()
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.String(50))
-    #sender_name = db.Column(db.String(50))
-    recipient_id = db.Column(db.String(50))
-    #recipient_name = db.Column(db.String(50))
+    sender_id = db.Column(db.Integer)
+    recipient_id = db.Column(db.Integer)
     body = db.Column(db.Text)
     send_date = db.Column(db.DateTime)
-    #content = posts = db.relationship('Post', backref='author', lazy='dynamic')
     message_type = db.Column(db.String(5))
-
-    #sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    #recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-
 
     def __init__(self, sender_id, recipient_id, body, message_type, send_date=None):
         self.sender_id = sender_id
-        #self.sender_name = sender_name
         self.recipient_id = recipient_id
-        #self.recipient_name = recipient_name
         self.body = body
         self.message_type = message_type
         if send_date is None:
@@ -62,8 +52,6 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(50))
     password =  db.Column(db.String(50))
-    #send_messages = db.relationship('Message', backref='sender', lazy='dynamic')
-    #recipient_messages = db.relationship('Message', backref='recipient', lazy='dynamic')
 
     def __init__(self, user_name, password):
         self.user_name = user_name

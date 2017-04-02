@@ -62,6 +62,14 @@ mysql://username:password@host:port/database
     Takes two users and loads all messages sent between them.
     Two optional parameters: the number of message to show per page and which page to load.
 
+- ```GET /metadata```
+        ```
+            parameters:
+                |message_id : _message_id
+                |type : _type
+        ```
+  Get metadata of video or image message
+
 ## Schema
 Four tables are created for this application.
 - User Table

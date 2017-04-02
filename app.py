@@ -100,6 +100,32 @@ def fetch():
         history = history.paginate(_page, _num_per_page, False).items
     return render_template('message_history.html', history=history)
 
+@app.route('/metadata', methods=['GET'])
+def metadata():
+
+    _type = request.args.get('type', '')
+    _message_id = request.args.get('message_id', '')
+    if _type == 'image':
+        try:
+            metadata = Image.query.filter(Image.message_id==_message_id).first()
+            if metadata is None:
+                return json.dumps({'message': 'Invaild message_id : message doesn\'t exist!'})
+            else:
+                return json.dumps({'message_id': metadata.message_id,
+                                    'width': metadata.width,
+                                    'height': metadata.height})
+        except Exception as e:
+            return json.dumps({'error':str(e)})
+    elif _type == 'video':
+        try:
+            metadata = Video.query.filter(Video.message_id==_message_id).first()
+            if metadata is None:
+                return json.dumps({'message': 'Invaild message_id : message doesn\'t exist!'})
+            else:
+                return json.dumps({'message_id': metadata.message_id,
+                                    'length': metadata.length})
+        except Exception as e:
+            return json.dumps({'error':str(e)})
 
 if __name__ == "__main__":
     app.run('0.0.0.0', port = 8080)

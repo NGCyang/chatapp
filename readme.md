@@ -63,11 +63,11 @@ mysql://username:password@host:port/database
     Two optional parameters: the number of message to show per page and which page to load.
 
 - ```GET /metadata```
-        ```
-            parameters:
-                |message_id : _message_id
-                |type : _type
-        ```
+  ```
+      parameters:
+            |message_id : _message_id
+            |type : _type
+  ```
   Get metadata of video or image message
 
 ## Schema
